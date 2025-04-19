@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"scrQTable",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"scrQTable",
+  "parent":{
+    "name":"Evolve",
+    "path":"folders/Scripts/Evolve.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
