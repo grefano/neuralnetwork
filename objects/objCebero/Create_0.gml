@@ -68,23 +68,18 @@ myqtable = new Qtable(function(i){
 	var table_row = other.table[i]
 	var qneuron = myneuralnetwork.output_neurons[i]
 
-	QPredict(table_row[QTABLE.predict_act_list], qneuron.val, 1)
+	q_act_predict(table_row[QTABLE.predict_act_list], qneuron.val, 1)
 
 	
-	var q = 0
-	var rate_dist_enemy = .005
-	var rate_dist_screen = .05
-	
-	var _distenemy =point_distance(self.x, self.y, objEnemy.x, objEnemy.y)*rate_dist_enemy
- 	q += _distenemy
-	var _distscreenx = abs(room_width/2 - x) > global.safearea_width/2 ? abs(room_width/2-x)-global.safearea_width/2 : 0
-	var _distscreeny = abs(room_height/2 - y) > global.safearea_height/2 ? abs(room_height/2-y)-global.safearea_height/2 : 0
-	q -= _distscreenx*rate_dist_screen
-	q -= _distscreeny*rate_dist_screen
+	var q = q_get()
+	// inverso
+	// q = 1
+	// q - _distscreenx*rate_dist_screen = 1			q = 1+_distscreenx*rate_dist_screen
+	// 
 	
 	//show_debug_message($"q {q}")
 	//show_message($"neuron {i} {qneuron.label}: q {q} dist {_distenemy}")
-	QPredict(table_row[QTABLE.predict_act_list], qneuron.val, -1)
+	q_act_predict(table_row[QTABLE.predict_act_list], qneuron.val, -1)
 
 	//show_debug_message($"after actback x {x} y {y} hspd {hspd} vspd {vspd}")
 

@@ -24,9 +24,11 @@ myneuralnetwork.input_neurons[0].val = (objEnemy.x-x)/room_height
 myneuralnetwork.input_neurons[1].val = (objEnemy.y-y)/room_height
 myneuralnetwork.input_neurons[2].val = energy
 var _distx = x-room_width/2
-myneuralnetwork.input_neurons[3].val = abs(_distx) > (global.safearea_width/2) ? _distx-sign(_distx)*(global.safearea_width/2) : 0 
+//myneuralnetwork.input_neurons[3].val = abs(_distx) > (global.safearea_width/2) ? _distx-sign(_distx)*(global.safearea_width/2) : 0 
 var _disty = y-room_height/2
-myneuralnetwork.input_neurons[4].val = abs(_disty) > (global.safearea_height/2) ? _disty-sign(_disty)*(global.safearea_height/2) : 0
+//myneuralnetwork.input_neurons[4].val = abs(_disty) > (global.safearea_height/2) ? _disty-sign(_disty)*(global.safearea_height/2) : 0
+myneuralnetwork.input_neurons[3].val = x-room_width/2
+myneuralnetwork.input_neurons[4].val = y-room_height/2
 
 
 myneuralnetwork.update()
@@ -44,6 +46,22 @@ if array_length(qtable_sorted) > 0{
 	var neuronio = myneuralnetwork.output_neurons[qtable_sorted[0][QTABLE.neuron_index]]
 	neuronio.func_action(neuronio.val)
 	neuron_act_index = array_get_index(myneuralnetwork.output_neurons, neuronio)
+
+	if alarm[0] == 10{
+		var q = q_get()	
+		var qpredict = qtable_sorted[0][QTABLE.qvalue]
+		
+		var loss = loss_get(qpredict, q)
+		var gradient = 2 * (qpredict - q) // loss / a
+		var qwant = qpredict + gradient
+		var lossnew = loss_get(qwant, q)
+		show_message($"qpredict {qpredict} - qreal {q} = loss {string_format(loss, 1, 5)}")
+		show_message($"quanto output tem q mudar pro loss ser 0: {string_format(gradient, 1, 5)}")
+		show_message($"novo loss {string_format(lossnew, 1, 5)}") // deveria ser 0
+		
+		
+		
+	}
 }
 //hacc += myneuralnetwork.output_neurons[0].val * energy
 //vacc += myneuralnetwork.output_neurons[1].val * energy

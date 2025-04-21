@@ -7,6 +7,5 @@ array_sort(qtable_sorted, function(_el1, _el2){
 
 
 
-
 alarm[0] = 10 
 

@@ -76,6 +76,14 @@ function neural_network(_n_input, _n_middle, _n_output) constructor{
 		}
 		
     }
+	
+	back_propagate = function(_neuron_out, _loss){
+		// ex: escolhi ir pra direita pq achei q iria ter Q=10, mas na verdade o Q foi igual à 8
+		// 
+		var neuron_value = _neuron_out.val
+		//neuron_value = 
+	}
+	
 	get_neuron_column_array = function(l){
 		if l == 0 return input_neurons;
 		if l == qtd_neuron_columns-1 return output_neurons
@@ -219,6 +227,10 @@ function neural_network(_n_input, _n_middle, _n_output) constructor{
         //draw_rectangle(_x_input, _y_input, _x_input+_width, _y_input+_height,true)
 
     }
+}
+
+function back_propagation(_){
+
 }
 
 

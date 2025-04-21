@@ -32,8 +32,33 @@ function create_qtable_actions(){
 	return qtable
 }
 
+function q_get(){
+	var q = 0
+	var rate_dist_enemy = .005
+	var rate_dist_screen = .05
+	
+	var _distenemy =point_distance(self.x, self.y, objEnemy.x, objEnemy.y)*rate_dist_enemy
+ 	q += _distenemy
+	var _distscreenx = abs(room_width/2 - x) > global.safearea_width/2 ? abs(room_width/2-x)-global.safearea_width/2 : 0
+	var _distscreeny = abs(room_height/2 - y) > global.safearea_height/2 ? abs(room_height/2-y)-global.safearea_height/2 : 0
+	q -= _distscreenx*rate_dist_screen
+	q -= _distscreeny*rate_dist_screen
+	return q
+}
+function loss_get(_result_predicted, _result_real){
+	return power(_result_predicted - _result_real, 2)
+}
+function get_output_from_q(q){
+	
+	// essa função serve para usar o Qreal e descobrir o output do neuronio
+	// -> weigthed sum -> OUTPUT -> acc -> spd -> pos -> Q_PREDICT -> -> LOSS
+	//                 <- OUTPUT <- acc <- spd <- pos <- Q_REAL    -> /
+	//                       \_____________________________/
+	// em um estado (posições fixas), existe uma taxa de variação do OUTPUT q resulta em uma variação no Q?
+	// 
+}
 
-function QPredict(_act_arr, _val, _pass=1){
+function q_act_predict(_act_arr, _val, _pass=1){
 	if _pass{
 		for(var a = 0; a < array_length(_act_arr); a++){
 			_act_arr[a](_val, _pass)
