@@ -23,7 +23,7 @@ width = 64
 height = 32
 
 
-myneuralnetwork = new neural_network(
+myneuralnetwork = new neural_network(id,
 [
 	new neuron_input("distx enemy"), new neuron_input("disty enemy"), new neuron_input("energy"), new neuron_input("distx screen"), new neuron_input("disty screen")
 ],
@@ -64,27 +64,7 @@ neuron_act_index = -1
 
 //			Q LEARNING
 qtable_sorted = []
-myqtable = new Qtable(function(i){
-	var table_row = other.table[i]
-	var qneuron = myneuralnetwork.output_neurons[i]
-
-	q_act_predict(table_row[QTABLE.predict_act_list], qneuron.val, 1)
-
-	
-	var q = q_get()
-	// inverso
-	// q = 1
-	// q - _distscreenx*rate_dist_screen = 1			q = 1+_distscreenx*rate_dist_screen
-	// 
-	
-	//show_debug_message($"q {q}")
-	//show_message($"neuron {i} {qneuron.label}: q {q} dist {_distenemy}")
-	q_act_predict(table_row[QTABLE.predict_act_list], qneuron.val, -1)
-
-	//show_debug_message($"after actback x {x} y {y} hspd {hspd} vspd {vspd}")
-
-	return q
-})
+myqtable = new Qtable(id)
 
 //new neuron_output("right", 0, ),
 	//new neuron_output("left", 0, new NeuronAct),

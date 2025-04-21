@@ -43,23 +43,26 @@ myqtable.evaluate_qtable()
 //myneuralnetwork.output_neurons[1].func_action(myneuralnetwork.output_neurons[1].val)
 // act
 if array_length(qtable_sorted) > 0{
-	var neuronio = myneuralnetwork.output_neurons[qtable_sorted[0][QTABLE.neuron_index]]
+	var qtablerow = qtable_sorted[0]
+	var neuron_index = qtablerow[QTABLE.neuron_index]
+	//var table_row_to_act = qtable_sorted[0][QTABLE.neuron_index]
+	var neuronio = myneuralnetwork.output_neurons[neuron_index]
 	neuronio.func_action(neuronio.val)
 	neuron_act_index = array_get_index(myneuralnetwork.output_neurons, neuronio)
 
 	if alarm[0] == 10{
+		myneuralnetwork.back_propagate(neuronio, qtablerow)
+		
 		var q = q_get()	
 		var qpredict = qtable_sorted[0][QTABLE.qvalue]
 		
-		var loss = loss_get(qpredict, q)
 		var gradient = 2 * (qpredict - q) // loss / a
 		var qwant = qpredict + gradient
-		var lossnew = loss_get(qwant, q)
-		show_message($"qpredict {qpredict} - qreal {q} = loss {string_format(loss, 1, 5)}")
-		show_message($"quanto output tem q mudar pro loss ser 0: {string_format(gradient, 1, 5)}")
-		show_message($"novo loss {string_format(lossnew, 1, 5)}") // deveria ser 0
-		
-		
+		//show_message($"qpredict {qpredict} - qreal {q} = loss {string_format(loss, 1, 5)}")
+		//show_message($"quanto output tem q mudar pro loss ser 0: {string_format(gradient, 1, 5)}")
+		//show_message($"novo loss {string_format(lossnew, 1, 5)}") // deveria ser 0
+		var outputvariation = get_output_variation_from_q(qwant, q)
+		show_message($"qpredict {qpredict} qreal {q} qwant {qwant} output variation {string_format(outputvariation, 1, 5)}")
 		
 	}
 }

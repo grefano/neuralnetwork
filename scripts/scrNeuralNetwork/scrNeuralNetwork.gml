@@ -49,8 +49,9 @@ function neuron_output(_label = "output", _bias = 0, _func_action) : neuron(_lab
 	func_action = _func_action
 }
 
-function neural_network(_n_input, _n_middle, _n_output) constructor{
-    input_neurons = _n_input
+function neural_network(_owner, _n_input, _n_middle, _n_output) constructor{
+    owner = _owner
+	input_neurons = _n_input
     //input_to_l1_connections = []
     middle_neurons = _n_middle
     //ln_to_output_connections = []
@@ -77,11 +78,49 @@ function neural_network(_n_input, _n_middle, _n_output) constructor{
 		
     }
 	
-	back_propagate = function(_neuron_out, _loss){
+	back_propagate = function(_neuron_out, _qtable_row){
 		// ex: escolhi ir pra direita pq achei q iria ter Q=10, mas na verdade o Q foi igual à 8
 		// 
-		var neuron_value = _neuron_out.val
-		//neuron_value = 
+		show_debug_message(_qtable_row)
+		var q = q_get()	
+		var qpredict = _qtable_row[QTABLE.qvalue]
+		var gradient = 2 * (qpredict - q) // loss / a
+		var qwant = qpredict + gradient
+		
+		var loss = loss_get(qpredict, q)
+		var lossnew = loss_get(qwant, q)
+		var outputvariation = get_output_variation_from_q(qwant, q)
+		
+		back = function(_node, _layer, _gradient, _connection_or_neuron){
+			var rate_learn = .1
+			if _connection_or_neuron{
+				// neuron
+				
+				// usar gradiente da conexao out (weight/)
+				var gradient = _node.bias/_gradient
+				
+				// voltando nas conexoes
+				for(var l = 0; l < array_length(_node.input_connections); l++){
+					var conexao = _node.input_connections[l]
+					back(conexao, _layer, gradient, 0)
+				}
+			} else {
+				// connection
+				
+				var gradient = _node.weight/_gradient// w / 
+				//show_debug_message(_node)
+				// voltando no neuronio input
+				var neuronio = _node.input_neuron
+				back(neuronio, _layer-1, gradient, 1)
+			}
+		}
+		
+		//var gradient_weight = -4 * _neuron_out.val// loss/qpred * v = -4*v
+		//var gradient_bias = -4 // loss/qpred
+		back(_neuron_out, self.owner.myneuralnetwork.qtd_neuron_columns, outputvariation, 1)
+
+		
+		//show_message($"qpredict {qpredict} qreal {q} qwant {qwant} output variation {string_format(outputvariation, 1, 5)}")
 	}
 	
 	get_neuron_column_array = function(l){
@@ -217,7 +256,7 @@ function neural_network(_n_input, _n_middle, _n_output) constructor{
 		
 		for(var i = 0; i < array_length(output_neurons); i++){
 			if !(_sel_col == qtd_neuron_columns-1 && _sel_row == i) && global.mousemode == E_MOUSEMODES.network_neuron_view continue
-            if (objCebero.neuron_act_index == i) draw_circle_color(column_x, row_y+_sep_y*i, _rad*1.25, c_lime, c_lime, false)
+            //if (self.owner.neuron_act_index == i) draw_circle_color(column_x, row_y+_sep_y*i, _rad*1.25, c_lime, c_lime, false)
 			output_neurons[i].draw(column_x, row_y+_sep_y*i, _rad)
         }
 		
@@ -227,10 +266,6 @@ function neural_network(_n_input, _n_middle, _n_output) constructor{
         //draw_rectangle(_x_input, _y_input, _x_input+_width, _y_input+_height,true)
 
     }
-}
-
-function back_propagation(_){
-
 }
 
 
